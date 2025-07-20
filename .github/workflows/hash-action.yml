@@ -1,0 +1,23 @@
+name: Generar SHA256
+
+on:
+  push:
+    paths:
+      - 'input.txt'
+
+jobs:
+  hash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generar hash SHA256
+        run: |
+          HASH=$(sha256sum input.txt | awk '{print $1}')
+          echo "$HASH" > output.txt
+      - name: Subir archivo de salida
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add output.txt
+          git commit -m "Hash actualizado"
+          git push
